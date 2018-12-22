@@ -4,11 +4,13 @@ class Solver {
     var $pos;
     var $sequence;
     var $depth;
+    //var $arrayList=[];
 
     function  initialization($current_pos) {
         $this->pos = $current_pos;
         $this->sequence = array();
         $this->depth=1;
+        //$this->arrayList[]=$current_pos;
     }
     function goalTest($goal) {
         if ($this->pos === $goal) {
@@ -16,28 +18,6 @@ class Solver {
         } else {
             return False;
         }
-    }
-    function possibleMoves() {
-        $Moves = array();
-        for ($i = 0; $i < 3; $i++) {
-            for ($j = 0; $j < 3; $j++) {
-                if ($this->pos[$i][$j] == 0) {
-                    break 2;
-                }
-            }
-        }
-        $this->checkMove($i, $j, $i - 1, $j, $Moves);
-        $this->checkMove($i, $j, $i + 1, $j, $Moves);
-        $this->checkMove($i, $j, $i, $j - 1, $Moves);
-        $this->checkMove($i, $j, $i, $j + 1, $Moves);
-        return $Moves;
-    }
-    function moveBlank($srcRow, $srcCol, $destRow, $destCol) {
-        $newpos = $this->pos;
-        $tmp = $newpos[$destRow][$destCol];
-        $newpos[$destRow][$destCol] = $newpos[$srcRow][$srcCol];
-        $newpos[$srcRow][$srcCol] = $tmp;
-        return $newpos;
     }
     function InSequence($pos) {
         for ($i = 0; $i < count($this->sequence); $i++) {
@@ -47,6 +27,14 @@ class Solver {
         }
         return FALSE;
     }
+    function moveBlank($srcRow, $srcCol, $destRow, $destCol) {
+        $newpos = $this->pos;
+        $tmp = $newpos[$destRow][$destCol];
+        $newpos[$destRow][$destCol] = $newpos[$srcRow][$srcCol];
+        $newpos[$srcRow][$srcCol] = $tmp;
+        return $newpos;
+    }
+
     function canMove($srcRow, $srcCol, $destRow, $destCol) {
         if ($srcRow < 0 or $srcCol < 0 or $destRow < 0 or $destCol < 0) {
             return FALSE;
@@ -67,6 +55,22 @@ class Solver {
                 $Moves[] = $newMove;
             }
         }
+    }
+
+    function possibleMoves() {
+        $Moves = array();
+        for ($i = 0; $i < 3; $i++) {
+            for ($j = 0; $j < 3; $j++) {
+                if ($this->pos[$i][$j] == 0) {
+                    break 2;
+                }
+            }
+        }
+        $this->checkMove($i, $j, $i - 1, $j, $Moves);
+        $this->checkMove($i, $j, $i + 1, $j, $Moves);
+        $this->checkMove($i, $j, $i, $j - 1, $Moves);
+        $this->checkMove($i, $j, $i, $j + 1, $Moves);
+        return $Moves;
     }
 
 
