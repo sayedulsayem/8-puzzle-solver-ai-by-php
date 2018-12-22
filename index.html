@@ -53,29 +53,54 @@ h5{
   <center><h1>8 puzzle game</h1></center>
 	<div class="container">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <center>
             <h1>Human Game</h1>
-            <table id="tbl">
-              <tr>
-                <td id="1" onclick="move(this)">1</td>
-                <td id="2" onclick="move(this)">2</td>
-                <td id="3" onclick="move(this)">3</td>
-              </tr>
-              <tr>
-                <td id="4" onclick="move(this)">4</td>
-                <td id="5" onclick="move(this)">6</td>
-                <td id="6" onclick="move(this)">5</td>
-              </tr>
-              <tr>
-                <td id="7" onclick="move(this)">7</td>
-                <td id="8" onclick="move(this)"> </td>
-                <td id="9" onclick="move(this)">8</td>
-              </tr>
-            </table>
+            <div class="row">
+              <div class="col-md-6">
+                <h5>Game Board</h5>
+                <table id="tbl">
+                  <tr>
+                    <td id="1" onclick="move(this)">1</td>
+                    <td id="2" onclick="move(this)">2</td>
+                    <td id="3" onclick="move(this)">3</td>
+                  </tr>
+                  <tr>
+                    <td id="4" onclick="move(this)">4</td>
+                    <td id="5" onclick="move(this)">6</td>
+                    <td id="6" onclick="move(this)">5</td>
+                  </tr>
+                  <tr>
+                    <td id="7" onclick="move(this)">8</td>
+                    <td id="8" onclick="move(this)">7</td>
+                    <td id="9" onclick="move(this)"> </td>
+                  </tr>
+                </table>
+              </div>
+              <div class="col-md-6">
+                <h5>Goal States</h5>
+                <table>
+                  <tr>
+                    <td>1</td>
+                    <td>2</td>
+                    <td>3</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>6</td>
+                    <td>5</td>
+                  </tr>
+                  <tr>
+                    <td>7</td>
+                    <td>8</td>
+                    <td> </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
           </center>
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
           <h1>Agent Solver</h1>
           <form action="solution-steps.php" method="post">
             <div class="row">
@@ -135,66 +160,66 @@ h5{
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.bundle.min.js" integrity="sha384-pjaaA8dDz/5BgdFUPX6M/9SUZv4d12SUPF0axWc+VRZkx5xU3daN+lYb49+Ax+Tl" crossorigin="anonymous"></script>
 <script type="text/javascript">
-	function move(elem){
-  var table = document.getElementById("tbl");
-  var arr=[];
-  var blankSpaceElem;
-  var bsp;
-  for(var i=1; i<10;i++){
-    var x = document.getElementById(String(i)).innerHTML;
-    if(x!=" "){
-      arr[i-1]=Number(x);
+  function move(elem){
+    var table = document.getElementById("tbl");
+    var arr=[];
+    var blankSpaceElem;
+    var bsp;// blank space position
+    for(var i=1; i<10;i++){
+      var x = document.getElementById(String(i)).innerHTML;
+      if(x!=" "){
+        arr[i-1]=Number(x);
+      }
+      else{
+        arr[i-1]=0;
+        blankSpaceElem = document.getElementById(String(i));
+        bsp=i-1;
+      }
+
     }
-    else{
-      arr[i-1]=0;
-      blankSpaceElem = document.getElementById(String(i));
-      bsp=i-1;
+    //alert(arr);
+    var ecp;// refers to element clicked position
+    for(i=0;i<9;i++){
+      if(elem.innerHTML == arr[i])
+      {ecp=i;}
     }
 
+    //check Top
+    if((bsp-3)>=0 && arr[ecp] == arr[bsp-3]){
+      var temp;
+      temp = elem.innerHTML;
+      elem.innerHTML = blankSpaceElem.innerHTML;
+      blankSpaceElem.innerHTML = temp;
+    }
+    //check Bottom
+    if((bsp+3)<=8 && arr[ecp] == arr[bsp+3]){
+      var temp;
+      temp = elem.innerHTML;
+      elem.innerHTML = blankSpaceElem.innerHTML;
+      blankSpaceElem.innerHTML = temp;
+    }
+
+    //check Left
+    if((bsp-1)>=0 && arr[ecp] == arr[bsp-1]){
+      var temp;
+      temp = elem.innerHTML;
+      elem.innerHTML = blankSpaceElem.innerHTML;
+      blankSpaceElem.innerHTML = temp;
+    }
+
+    //check Right
+    if((bsp+1)<=8 && arr[ecp] == arr[bsp+1]){
+      var temp;
+      temp = elem.innerHTML;
+      elem.innerHTML = blankSpaceElem.innerHTML;
+      blankSpaceElem.innerHTML = temp;
+    }
+    var array2=[1,2,3,4,5,6,7,8,0];
+    var is_same = (arr.length == 9) && arr.every(function(element, index) {
+      return element === array2[index]; });
+    if(is_same){
+      alert("Congratulations! You have successfully completed the game!");
+    }
   }
-
-  var ecp;
-  for(i=0;i<9;i++){
-    if(elem.innerHTML == arr[i])
-    {ecp=i;}
-  }
-
-
-  if((bsp-3)>=0 && arr[ecp] == arr[bsp-3]){ 
-    var temp;
-    temp = elem.innerHTML;
-    elem.innerHTML = blankSpaceElem.innerHTML;
-    blankSpaceElem.innerHTML = temp;
-  }
-
-  if((bsp+3)<=8 && arr[ecp] == arr[bsp+3]){ 
-    var temp;
-    temp = elem.innerHTML;
-    elem.innerHTML = blankSpaceElem.innerHTML;
-    blankSpaceElem.innerHTML = temp;
-  }
-
-
-  if((bsp-1)>=0 && arr[ecp] == arr[bsp-1]){ 
-    var temp;
-    temp = elem.innerHTML;
-    elem.innerHTML = blankSpaceElem.innerHTML;
-    blankSpaceElem.innerHTML = temp;
-  }
-
-
-  if((bsp+1)<=8 && arr[ecp] == arr[bsp+1]){ 
-    var temp;
-    temp = elem.innerHTML;
-    elem.innerHTML = blankSpaceElem.innerHTML;
-    blankSpaceElem.innerHTML = temp;
-  }
-  var array2=[1,2,3,4,5,6,7,8,0];
-  var is_same = (arr.length == 9) && arr.every(function(element, index) {
-    return element === array2[index]; });
-  if(is_same){
-    alert("Congratulations! You have successfully completed the game!");
-  }
-}
 </script>
 </html>

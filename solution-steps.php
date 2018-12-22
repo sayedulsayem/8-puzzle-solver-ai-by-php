@@ -143,6 +143,9 @@
                 }
                 $moves = $current_state->possibleMoves();
                 foreach ($moves as $move) {
+//                    var_dump($move);
+//                    echo "<br>";
+//                    echo "<br>";
                     $nodeQue->enqueue($move);
                 }
                 $nodeQue->rewind();
