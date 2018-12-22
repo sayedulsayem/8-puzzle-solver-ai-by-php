@@ -44,15 +44,36 @@ class Solver {
         }
         return TRUE;
     }
+//    function checkRepeat($newPos){
+//        $i=0;
+//        foreach ($this->arrayList as $array){
+//            if ($array == $newPos){
+//                $i=1;
+//            }
+//        }
+//        if ($i == 0){
+//            $this->arrayList[]=$newPos;
+//        }
+//
+//        if ($i == 0){
+//            return false;
+//        }
+//        elseif ($i == 1){
+//            return true;
+//        }
+//    }
     function checkMove($srcRow, $srcCol, $destRow, $destCol, & $Moves) {
         if ($this->canMove($srcRow, $srcCol, $destRow, $destCol)) {
             $newpos = $this->moveBlank($srcRow, $srcCol, $destRow, $destCol);
             if (!$this->InSequence($newpos)) {
-                $newMove = new Solver();
-                $newMove->initialization($newpos);
-                $newMove->sequence = array_merge($this->sequence);
-                $newMove->sequence[] = $newpos;
-                $Moves[] = $newMove;
+                //$repeat= $this->checkRepeat($newpos);
+                //if ($repeat == false){
+                    $newMove = new Solver();
+                    $newMove->initialization($newpos);
+                    $newMove->sequence = array_merge($this->sequence);
+                    $newMove->sequence[] = $newpos;
+                    $Moves[] = $newMove;
+                //}
             }
         }
     }

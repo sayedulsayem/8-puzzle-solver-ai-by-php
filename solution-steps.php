@@ -1,3 +1,11 @@
+<?php
+
+require_once ('solver.php');
+
+$data=$_POST;
+//var_dump($data);
+
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -43,11 +51,6 @@
 
             <?php
 
-            require_once ('solver.php');
-
-            $data=$_POST;
-            //var_dump($data);
-
             $start_time = (double)microtime();
 
             $initial_pos = array(
@@ -56,15 +59,20 @@
                 array($data['21'], $data['22'], $data['23'])
             );
 
+            //var_dump($initial_pos);
+
             $goal_pos = array(
                 array($data['71'], $data['72'], $data['73']),
                 array($data['81'], $data['82'], $data['83']),
                 array($data['91'], $data['92'], $data['93'])
             );
 
+            //var_dump($goal_pos);
+
             $initial_state = new Solver();
             $initial_state->initialization($initial_pos);
             $initial_state->sequence = $initial_pos;
+            //$initial_state->arrayList= $initial_pos;
 
             $nodeQue = new SplQueue();
             $nodeQue->enqueue($initial_state);
@@ -143,9 +151,9 @@
                 }
                 $moves = $current_state->possibleMoves();
                 foreach ($moves as $move) {
-//                    var_dump($move);
-//                    echo "<br>";
-//                    echo "<br>";
+                    var_dump($move);
+                    echo "<br>";
+                    echo "<br>";
                     $nodeQue->enqueue($move);
                 }
                 $nodeQue->rewind();
@@ -157,7 +165,8 @@
             $end_time = (double)microtime();
             $time_exec = $end_time - $start_time;
             print("<br>Execution time used = " . $time_exec);
-
+            echo "<br>";
+            echo "<br>";
 
             ?>
             </center>
