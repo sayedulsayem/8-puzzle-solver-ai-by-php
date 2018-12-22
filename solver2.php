@@ -2,11 +2,12 @@
 
 $arrayList=[];
 
+$sequence=[];
 
 //functions
 
-function moveBlank($srcRow, $srcCol, $destRow, $destCol) {
-    $newpos = $this->pos;
+function moveBlank($srcRow, $srcCol, $destRow, $destCol, & $pos) {
+    $newpos = $pos;
     $tmp = $newpos[$destRow][$destCol];
     $newpos[$destRow][$destCol] = $newpos[$srcRow][$srcCol];
     $newpos[$srcRow][$srcCol] = $tmp;
@@ -23,36 +24,90 @@ function canMove($srcRow, $srcCol, $destRow, $destCol) {
     return TRUE;
 }
 
-function checkMove($srcRow, $srcCol, $destRow, $destCol, & $Moves) {
-    if ($this->canMove($srcRow, $srcCol, $destRow, $destCol)) {
-        $newpos = $this->moveBlank($srcRow, $srcCol, $destRow, $destCol);
-        if (!$this->InSequence($newpos)) {
-            //$repeat= $this->checkRepeat($newpos);
-            //if ($repeat == false){
-            $newMove = new Solver();
-            $newMove->initialization($newpos);
-            $newMove->sequence = array_merge($this->sequence);
-            $newMove->sequence[] = $newpos;
-            $Moves[] = $newMove;
-            //}
+function checkRepeat($newPos){
+    $allMoves= $GLOBALS['arrayList'];
+    $i=0;
+    foreach ($allMoves as $move){
+        if ($move == $newPos){
+            $i=1;
         }
+    }
+    if ($i == 0){
+        $GLOBALS['arrayList'][]=$newPos;
+    }
+
+    if ($i == 0){
+        return false;
+    }
+    elseif ($i == 1){
+        return true;
     }
 }
 
+function setParent($parent,$child){
+    $GLOBALS['sequence']["$child"]=$parent;
+}
+
+function getParent($child){
+    $sequence=$GLOBALS['sequence'];
+    return $sequence["$child"];
+}
+
 function possibleMoves($current_state) {
-    $moves = $current_state;
+
+    $moves=[];
+
+    $detectBlankSpace = $current_state;
     for ($i = 0; $i < 3; $i++) {
         for ($j = 0; $j < 3; $j++) {
-            if ($moves[$i][$j] == 0) {
+            if ($detectBlankSpace[$i][$j] == 0) {
                 break 2;
             }
         }
     }
-    checkMove($i, $j, $i - 1, $j, $moves);
-    checkMove($i, $j, $i + 1, $j, $moves);
-    checkMove($i, $j, $i, $j - 1, $moves);
-    checkMove($i, $j, $i, $j + 1, $moves);
+
+    if (canMove($i, $j, $i+1, $j, $current_state)){
+
+        $newMove=moveBlank($i, $j, $i+1, $j, $current_state);
+
+        setParent($current_state,$newMove);
+
+        $check=checkRepeat($newMove);
+        if ($check == false){
+            $moves[]=$newMove;
+        }
+
+    }
+    if (canMove($i, $j, $i-1, $j, $current_state)){
+
+        $newMove=moveBlank($i, $j, $i-1, $j, $current_state);
+
+        $check=checkRepeat($newMove);
+        if ($check == false){
+            $moves[]=$newMove;
+        }
+    }
+    if (canMove($i, $j, $i, $j+1, $current_state)){
+
+        $newMove=moveBlank($i, $j, $i, $j+1, $current_state);
+
+        $check=checkRepeat($newMove);
+        if ($check == false){
+            $moves[]=$newMove;
+        }
+    }
+    if (canMove($i, $j, $i, $j-1, $current_state)){
+
+        $newMove=moveBlank($i, $j, $i, $j-1, $current_state);
+
+        $check=checkRepeat($newMove);
+        if ($check == false){
+            $moves[]=$newMove;
+        }
+    }
+
     return $moves;
+
 }
 
 
@@ -76,7 +131,7 @@ $node=new SplQueue();
 $node->enqueue($initial_pos);
 $node->rewind();
 
-$i=0;
+$i=1;
 
 while ($node->valid()){
     if ($i % 10000 == 0) {
@@ -89,14 +144,34 @@ while ($node->valid()){
 
     $current_state= $node->dequeue();
     if ($current_state == $goal_pos){
-        print("Solution found in $i steps<br>");
+        print("<br>Solution found in $i steps<br>");
         print("Unopened Nodes left in the Que=" . $node->count() . "<br>");
+
+        //solution path
+        $parent=getParent($current_state);
+        echo $parent;
+
         break;
     }
 
     $moves= possibleMoves($current_state);
 
+    foreach ($moves as $move){
 
+//        echo "<br>";
+//        var_dump($move);
+//        echo "<br>";
+
+        $node->enqueue($move);
+    }
+    $node->rewind();
 
     $i++;
 }
+
+print ("<br>Maximum Memory used " . memory_get_peak_usage());
+print ("<br>Current Memory used " . memory_get_usage());
+$end_time = (double)microtime();
+$time_exec = $end_time - $start_time;
+print("<br>Execution time used = " . $time_exec);
+echo "<br>";
