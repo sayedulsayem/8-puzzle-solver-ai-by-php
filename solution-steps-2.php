@@ -1,6 +1,6 @@
 <?php
 
-require_once ('solver.php');
+require_once('solver-2.php');
 
 $data=$_POST;
 //var_dump($data);
@@ -77,6 +77,7 @@ $data=$_POST;
             $nodeQue = new SplQueue();
             $nodeQue->enqueue($initial_state);
             $nodeQue->rewind();
+
             $i = 1;
 
             while ($nodeQue->valid()) {
@@ -151,9 +152,6 @@ $data=$_POST;
                 }
                 $moves = $current_state->possibleMoves();
                 foreach ($moves as $move) {
-                    var_dump($move);
-                    echo "<br>";
-                    echo "<br>";
                     $nodeQue->enqueue($move);
                 }
                 $nodeQue->rewind();
